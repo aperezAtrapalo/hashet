@@ -111,33 +111,27 @@ func TestRehash(t *testing.T) {
 }
 
 func BenchmarkRehash10(b *testing.B) {
-	s := createSet(10)
-	h := New(len(s[0]))
-	benchmarkRehash(h, s, b)
+	benchmarkRehash(10, b)
 }
 
 func BenchmarkRehash1000(b *testing.B) {
-	s := createSet(1000)
-	h := New(len(s[0]))
-	benchmarkRehash(h, s, b)
+	benchmarkRehash(1000, b)
 }
 
 func BenchmarkRehash100000(b *testing.B) {
-	s := createSet(100000)
-	h := New(len(s[0]))
-	benchmarkRehash(h, s, b)
+	benchmarkRehash(100000, b)
 }
 
 func BenchmarkRehash10000000(b *testing.B) {
-	s := createSet(10000000)
-	h := New(len(s[0]))
-	benchmarkRehash(h, s, b)
+	benchmarkRehash(10000000, b)
 }
 
-func benchmarkRehash(h Hash, set [][]byte, b *testing.B) {
+func benchmarkRehash(i int, b *testing.B) {
+	s := createSet(i)
+	h := New(len(s[0]))
 	b.ResetTimer()
 	for n := 0; n < b.N; n++ {
-		h.Rehash(set...)
+		h.Rehash(s...)
 	}
 }
 
