@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	. "github.com/marc-gr/hashet"
+	"github.com/satori/go.uuid"
 )
 
 func TestNew(t *testing.T) {
@@ -107,4 +108,43 @@ func TestRehash(t *testing.T) {
 			}
 		})
 	}
+}
+
+func BenchmarkRehash10(b *testing.B) {
+	s := createSet(10)
+	h := New(len(s[0]))
+	benchmarkRehash(h, s, b)
+}
+
+func BenchmarkRehash1000(b *testing.B) {
+	s := createSet(1000)
+	h := New(len(s[0]))
+	benchmarkRehash(h, s, b)
+}
+
+func BenchmarkRehash100000(b *testing.B) {
+	s := createSet(100000)
+	h := New(len(s[0]))
+	benchmarkRehash(h, s, b)
+}
+
+func BenchmarkRehash10000000(b *testing.B) {
+	s := createSet(10000000)
+	h := New(len(s[0]))
+	benchmarkRehash(h, s, b)
+}
+
+func benchmarkRehash(h Hash, set [][]byte, b *testing.B) {
+	b.ResetTimer()
+	for n := 0; n < b.N; n++ {
+		h.Rehash(set...)
+	}
+}
+
+func createSet(n int) [][]byte {
+	set := [][]byte{}
+	for i := 0; i < n; i++ {
+		set = append(set, uuid.NewV4().Bytes())
+	}
+	return set
 }
