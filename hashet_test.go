@@ -144,7 +144,7 @@ func benchmarkRehash(h Hash, set [][]byte, b *testing.B) {
 func createSet(n int) [][]byte {
 	set := [][]byte{}
 	for i := 0; i < n; i++ {
-		set = append(set, uuid.NewV4().Bytes())
+		set = append(set, uuid.NewV1().Bytes())
 	}
 	return set
 }
