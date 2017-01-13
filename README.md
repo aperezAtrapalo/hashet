@@ -5,7 +5,7 @@
 ## getting the package
 
 ```sh
-go get -u -t -i github.com/marc-gr/hashet
+go get -u -t github.com/marc-gr/hashet
 ```
 
 ## using it
@@ -25,10 +25,10 @@ h.Rehash(someBytes)
 
 ## use case
 
-This package is intended to provide an easy way to assert the integrity of an unordered set by generating a hash for a set of data, you can add data gradually to the set and the hash will update accordingly.
-Two sets with the same data, no matter the order of it, will generate the same hash.
-If you want to remove the data from the set, just rehash the value again with the removed register and it will recalculate it.
+This package provides an easy way to assert the integrity of an unordered set of data by generating a hash. You can add data gradually to the set and the hash will update accordingly.
+Two sets with the same values, no matter the order, will generate the same hash.
+If you want to remove data from the set, just rehash again with the removed value and it will recalculate it.
 
 ## not use when
 
-If you are looking for a cryptographic safe hash, this is not for you. This package only provide a fast and cheap integrity check.
+If you are looking for a cryptographic safe hash, this is not for you. This package only provides a fast and cheap integrity check.
