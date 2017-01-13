@@ -9,12 +9,13 @@ import (
 
 // Hash represents a hash object.
 type Hash interface {
-	// Rehash recalculates the hash value with a new one.
+	// Rehash recalculates the hash value with each one of
+	// the values provided.
 	// Calling it twice with the same value will return
 	// the hash to the previous state.
 	// It will return an error if the length of the hash
 	// and the new value mismatch.
-	Rehash(v string) error
+	Rehash(values ...string) error
 }
 
 type xor struct {
@@ -32,27 +33,27 @@ func New(l int) Hash {
 // of length different than l.
 func NewFromSet(l int, set []string) (Hash, error) {
 	h := New(l)
-	for _, v := range set {
-		if err := h.Rehash(v); err != nil {
-			return nil, err
-		}
+	if err := h.Rehash(set...); err != nil {
+		return nil, err
 	}
 	return h, nil
 }
 
-func (h *xor) Rehash(v string) error {
+func (h *xor) Rehash(values ...string) error {
 	hlen := len(h.value)
-	vlen := len(v)
-	if hlen != vlen {
-		return newErrMismatch(hlen, vlen, "length mismatch")
-	}
+	for _, v := range values {
+		vlen := len(v)
+		if hlen != vlen {
+			return newErrMismatch(hlen, vlen, "length mismatch")
+		}
 
-	newValue := make([]byte, hlen)
-	for i := 0; i < hlen; i++ {
-		newValue[i] = h.value[i] ^ v[i]
-	}
+		newValue := make([]byte, hlen)
+		for i := 0; i < hlen; i++ {
+			newValue[i] = h.value[i] ^ v[i]
+		}
 
-	h.value = newValue
+		h.value = newValue
+	}
 	return nil
 }
 
