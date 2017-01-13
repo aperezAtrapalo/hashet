@@ -6,6 +6,13 @@ import (
 	"fmt"
 )
 
+const (
+	// HashLengthLesserThanValue is used for error handling
+	HashLengthLesserThanValue = -1
+	// HashLengthGreaterThanValue is used for error handling
+	HashLengthGreaterThanValue = 1
+)
+
 // Hash represents a hash object.
 type Hash interface {
 	// Rehash recalculates the hash value with the new set provided.
@@ -76,7 +83,7 @@ func newErrMismatch(exp, got int, msg string) error {
 
 func (err *errMismatch) Mismatch() int {
 	if err.expected < err.got {
-		return -1
+		return HashLengthLesserThanValue
 	}
-	return 1
+	return HashLengthGreaterThanValue
 }

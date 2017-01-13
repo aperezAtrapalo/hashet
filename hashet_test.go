@@ -72,13 +72,13 @@ func TestRehash(t *testing.T) {
 			name:         "hash rehash throws correct mismatch shorter error",
 			args:         args{l: 1, set: [][]byte{{0, 2}}},
 			wantErr:      true,
-			wantMismatch: -1,
+			wantMismatch: HashLengthLesserThanValue,
 		},
 		{
 			name:         "hash rehash throws correct mismatch longer error",
 			args:         args{l: 2, set: [][]byte{{0}}},
 			wantErr:      true,
-			wantMismatch: 1,
+			wantMismatch: HashLengthGreaterThanValue,
 		},
 		{
 			name: "hash rehash prints the correct hash",
