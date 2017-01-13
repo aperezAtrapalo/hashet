@@ -1,6 +1,5 @@
-// Package hashtring exposes a Hash interface suited for incremental hashing of
-// string sets.
-package hashtring
+// Package hashet exposes a Hash interface suited for incremental hashing of sets.
+package hashet
 
 import (
 	"errors"
@@ -9,13 +8,12 @@ import (
 
 // Hash represents a hash object.
 type Hash interface {
-	// Rehash recalculates the hash value with each one of
-	// the values provided.
-	// Calling it twice with the same value will return
-	// the hash to the previous state.
-	// It will return an error if the length of the hash
-	// and the new value mismatch.
-	Rehash(values ...string) error
+	// Rehash recalculates the hash value with the new set provided.
+	// Calling it twice with the same values will return the hash to the previous state.
+	// It will return an error if there is any length mismatch.
+	Rehash(set ...[]byte) error
+
+	fmt.Stringer
 }
 
 type xor struct {
@@ -27,11 +25,9 @@ func New(l int) Hash {
 	return &xor{value: make([]byte, l)}
 }
 
-// NewFromSet returns a hash object of length l
-// with the value calculated from the given set.
-// Returns an error if the set has any value
-// of length different than l.
-func NewFromSet(l int, set []string) (Hash, error) {
+// NewFromSet returns a hash object of length l with the value calculated from the given set.
+// It will return an error if there is any length mismatch.
+func NewFromSet(l int, set ...[]byte) (Hash, error) {
 	h := New(l)
 	if err := h.Rehash(set...); err != nil {
 		return nil, err
@@ -39,9 +35,9 @@ func NewFromSet(l int, set []string) (Hash, error) {
 	return h, nil
 }
 
-func (h *xor) Rehash(values ...string) error {
+func (h *xor) Rehash(set ...[]byte) error {
 	hlen := len(h.value)
-	for _, v := range values {
+	for _, v := range set {
 		vlen := len(v)
 		if hlen != vlen {
 			return newErrMismatch(hlen, vlen, "length mismatch")
@@ -61,11 +57,9 @@ func (h *xor) String() string {
 	return fmt.Sprintf("%x", string(h.value))
 }
 
-// Mismatch offers an interface for
-// checking mismatching errors.
+// Mismatch offers an interface for checking mismatching errors.
 type Mismatch interface {
-	// Mismatch returns a negative number if the expected
-	// value is lower than the received, and a positive number
+	// Mismatch returns a negative number if the expected value is lower than the received, and a positive number
 	// otherwise.
 	Mismatch() int
 }
